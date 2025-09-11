@@ -1,0 +1,63 @@
+\documentclass[letterpaper, 11pt]{extarticle}
+% \usepackage{fontspec}
+
+% ==================================================
+
+% document parameters
+\usepackage[english]{babel}
+\usepackage[margin = 1in]{geometry}
+
+% ==================================================
+
+% Packages for math
+\usepackage{mathrsfs}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{dsfont}
+\usepackage{esint}
+
+% ==================================================
+
+% Packages for writing
+\usepackage{enumerate}
+\usepackage[shortlabels]{enumitem}
+\usepackage{framed}
+\usepackage{csquotes}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+% ==================================================
+
+% Miscellaneous packages
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{multicol}
+\usepackage{subcaption}
+\usepackage{caption}
+\captionsetup{format = hang, margin = 10pt, font = small, labelfont = bf}
+\setlength{\headheight}{42pt}
+
+% Citation
+\usepackage{biblatex}
+%\addbibresource{/home/katyl/Zotero/zotero.bib}
+
+% Hyperlinks setup
+\usepackage{hyperref}
+\definecolor{links}{rgb}{0.36,0.54,0.66}
+\hypersetup{
+   colorlinks = true,
+    linkcolor = black,
+     urlcolor = blue,
+    citecolor = blue,
+    filecolor = blue,
+    pdfauthor = {\myname},
+     pdftitle = {\assignment},
+   pdfsubject = {\classname},
+  pdfkeywords = {\keywords},
+  pdfproducer = {LaTeX},
+   pdfcreator = {pdfLaTeX},
+}
