@@ -54,3 +54,5 @@ This will generate a PDF with the same name as your main `.tex` file.
 This repository includes a GitHub Actions workflow in `.github/workflows/build.yml` that automatically builds the PDF of your assignment. The workflow is triggered on pushes and pull requests to the `main` branch, and also when a new tag is created.
 
 When a tag is pushed, the workflow will create a new release and upload the compiled PDF as a release artifact.
+
+> **Important:** For the CI/CD workflow to function correctly, you must enable "Read and Write permissions" for workflows in your GitHub repository settings. You can find this setting under `Settings > Actions > General > Workflow permissions`.
