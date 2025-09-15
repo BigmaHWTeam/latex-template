@@ -3,6 +3,11 @@
 *.log
 *.out
 *.pdf
-*.xlsx
 *.xml
 .gemini/
+*.bbl
+*.blg
+*.dvi
+*.fdb_latexmk
+*.fls
+*.ps

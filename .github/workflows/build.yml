@@ -21,7 +21,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: self-hosted
     env:
-      BUILD_FILE: hw1
+      BUILD_FILE: assignment
     container: 
       image: cristiangreco/pdflatex
 
@@ -32,7 +32,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run pdflatex
-        run: latexmk
+        run: latexmk $BUILD_FILE.tex
 
       # Runs a set of commands using the runners shell
       - name: Upload PDF
@@ -46,4 +46,4 @@ jobs:
         if: github.ref_type == 'tag'
         with:
           files: |
-            assignment.pdf
+            ${{ env.BUILD_FILE }}.pdf
