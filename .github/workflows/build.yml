@@ -23,7 +23,8 @@ jobs:
     env:
       BUILD_FILE: assignment
     container: 
-      image: cristiangreco/pdflatex
+      image: registry.casterlyrock.westeros/pdflatex:latest
+      # image: cristiangreco/pdflatex
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
