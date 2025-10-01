@@ -6,34 +6,57 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]
     tags: ["*"]
-  pull_request:
-    branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  # run_ampl:
+  #   runs-on: self-hosted
+  #   env:
+  #     AMPLHW_OUTPUT: true
+  #   container:
+  #     # image: registry.casterlyrock.westeros/python:3.10
+  #     image: python:3.10
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Install pip dependencies
+  #       run: |
+  #         pip install -r requirements.txt
+  #     - name: Install venv dependencies
+  #       run: |
+  #         make dependencies
+  #     - name: Run AMPL
+  #       run: make ampl
+  #     - name: Upload AMPL output
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: ampl_output
+  #         path: "ampl_output/*"
   # This workflow contains a single job called "build"
   build:
+    needs: run_ampl
     # The type of runner that the job will run on
     runs-on: self-hosted
-    env:
-      BUILD_FILE: assignment
     container: 
-      image: registry.casterlyrock.westeros/pdflatex:latest
-      # image: cristiangreco/pdflatex
+      # image: registry.casterlyrock.westeros/pdflatex:latest
+      image: cristiangreco/pdflatex
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-
+      - uses: actions/download-artifact@v4
+        with:
+          name: ampl_output
+          path: ampl_output
       # Runs a single command using the runners shell
       - name: Run pdflatex
-        run: latexmk $BUILD_FILE.tex
+        run: |
+          make
 
       # Runs a set of commands using the runners shell
       - name: Upload PDF
