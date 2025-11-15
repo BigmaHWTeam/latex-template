@@ -6,9 +6,14 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils, ... }@inputs:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
+  outputs = {
+    self,
+    nixpkgs,
+    flake-utils,
+    ...
+  } @ inputs:
+    flake-utils.lib.eachDefaultSystem (
+      system: let
         pkgs = nixpkgs.legacyPackages.${system};
         fhsEnvironment = pkgs.buildFHSEnv {
           name = "fhs-env";
@@ -19,13 +24,32 @@
         };
         devShell = pkgs.mkShell {
           packages = [
+            pkgs.texlivePackages.latexmk
             pkgs.python3
             pkgs.python3Packages.pip
             pkgs.python3Packages.virtualenv
             pkgs.zstd
-            pkgs.texlive.combined.scheme-full
+            (pkgs.texliveSmall.withPackages (
+              ps:
+                with ps; [
+                  amsfonts
+                  appendix
+                  biblatex
+                  csquotes
+                  doublestroke
+                  enumitem
+                  esint
+                  framed
+                  pdfcol
+                  physics
+                  rsfs
+                  tikzfill
+                  tcolorbox
+                  titlesec
+                ]
+            ))
           ];
-          inputsFrom = [ fhsEnvironment ];
+          inputsFrom = [fhsEnvironment];
           shellHook = ''
             if [ ! -d ".venv" ]; then
               echo "Creating virtual environment..."

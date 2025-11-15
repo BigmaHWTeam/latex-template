@@ -13,3 +13,4 @@
 *.ps
 build/
 .vscode/
+.direnv/
