@@ -11,3 +11,5 @@
 *.fdb_latexmk
 *.fls
 *.ps
+build/
+.vscode/
