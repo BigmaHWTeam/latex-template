@@ -2,7 +2,7 @@
   description = "A devshell flake with latex, python, and assignment profiles";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/c5ae371f1a6a7fd27823bc500d9390b38c05fa55";
+    nixpkgs.url = "github:NixOS/nixpkgs/2d293cbfa5a793b4c50d17c05ef9e385b90edf6c";
   };
 
   outputs = {
