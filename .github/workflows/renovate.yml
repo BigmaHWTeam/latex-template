@@ -35,3 +35,4 @@ jobs:
           LOG_LEVEL: ${{ github.event.inputs.logLevel || 'info' }}
           RENOVATE_DRY_RUN: ${{ github.event.inputs.dryRun || 'false' }}
           RENOVATE_PRINT_CONFIG: ${{ github.event.inputs.printConfig || 'false' }}
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
