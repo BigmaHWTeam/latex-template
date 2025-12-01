@@ -20,7 +20,6 @@ on:
 
 jobs:
   renovate:
-    if: github.repository_name == 'latex-template'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
