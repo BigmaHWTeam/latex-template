@@ -1,16 +1,26 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:best-practices"
   ],
   "onboarding": false,
+  "automerge": true,
+  "automergeType": "branch",
+  "ignoreTests": true,
   "nix": {
     "enabled": true
   },
   "pip_requirements": {
     "enabled": true
   },
-  "automerge": true,
-  "platformAutomerge": true,
-  "ignoreTests": true
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["at any time"]
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["nix"],
+      "groupName": "nix flake inputs"
+    }
+  ]
 }
