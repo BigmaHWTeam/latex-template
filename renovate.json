@@ -3,7 +3,6 @@
   "extends": [
     "config:best-practices"
   ],
-  "onboarding": false,
   "automerge": true,
   "automergeType": "branch",
   "ignoreTests": true,
