@@ -4,6 +4,8 @@
     "config:best-practices"
   ],
   "automerge": true,
+  "automergeSchedule": ["at any time"],
+  "automergeStrategy": "merge-commit",
   "automergeType": "branch",
   "ignoreTests": true,
   "nix": {
