@@ -14,6 +14,7 @@ on:
 
 env:
   MAIN_FILE: assignment
+  BUILD_NAME: assignment
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -33,7 +34,7 @@ jobs:
       - name: Run pdflatex
         run: |
           apk add --no-cache make || (apt-get update && apt-get install -y make)
-          make
+          make BUILD_NAME=${{ env.BUILD_NAME }}
 
       # Runs a set of commands using the runners shell
       - name: Upload PDF
@@ -41,10 +42,10 @@ jobs:
         if: github.ref_type != 'tag'
         with:
           name: pdf file
-          path: "build/${{ env.MAIN_FILE }}.pdf"
+          path: "build/${{ env.BUILD_NAME }}.pdf"
       - name: create release
         uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
         with:
           files: |
-            build/${{ env.MAIN_FILE }}.pdf
+            build/${{ env.BUILD_NAME }}.pdf
