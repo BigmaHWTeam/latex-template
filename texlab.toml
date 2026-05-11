@@ -1,0 +1,4 @@
+[build]
+executable = "make"
+args = []
+onSave = true

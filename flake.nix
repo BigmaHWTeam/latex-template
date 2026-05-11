@@ -32,11 +32,11 @@
             pkgs.python3Packages.virtualenv
           ];
           shellHook = ''
-            if [ ! -d ".venv" ]; then
+            if [ ! -d ".venv" ] || ! .venv/bin/python --version &>/dev/null; then
               virtualenv .venv
             fi
             source .venv/bin/activate
-            if [ -f "requirements.txt" ]; then
+            if [ -s "requirements.txt" ]; then
               pip install -r requirements.txt
             fi
           '';
@@ -45,6 +45,7 @@
         latex = pkgs.mkShell {
           packages = [
             pkgs.ghostscript
+            pkgs.pandoc
             pkgs.yq-go
             pkgs.zstd
             pkgs.texlivePackages.latexmk
