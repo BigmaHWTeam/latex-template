@@ -1,16 +1,31 @@
+# Build output. Everything latexmk generates lands in build/ via .latexmkrc,
+# so this is the main entry.
+build/
+
+# A bare *.pdf would also ignore figures committed under images/, which
+# \graphicspath points at. Scope it to the repo root and keep figures.
+/*.pdf
+!images/*.pdf
+
+# LaTeX intermediates, for the case where something is run outside build/
 *.aux
-*.bcf
-*.log
-*.out
-*.pdf
-*.xml
-.gemini/
 *.bbl
+*.bcf
 *.blg
 *.dvi
 *.fdb_latexmk
 *.fls
+*.log
+*.out
 *.ps
-build/
-.vscode/
+*.run.xml
+*.synctex.gz
+*.toc
+*.xml
+
+# Tooling
 .direnv/
+.venv/
+.vscode/
+.gemini/
+indent.log

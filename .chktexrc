@@ -1,4 +1,17 @@
-UserEnvir {
-  problem
-  subproblem
+# chktex configuration. Keys must be ones chktex actually knows: an unknown
+# key is a hard ERROR that aborts the run rather than a warning, which is how
+# the previous `UserEnvir` block silently disabled linting entirely.
+
+# Skip the contents of code listings; chktex's prose rules do not apply there.
+VerbEnvir { lstlisting verbatim Verbatim }
+
+# Warning 8 (dash length) fires on TikZ's `--` path operator. It is suppressed
+# per-line with a trailing `% chktex 8` in format.tex rather than globally, so
+# genuine en-dash mistakes in prose are still caught.
+
+# Warning 3 wants {(1-p)}^{n-i} instead of (1-p)^{n-i}. In braced math the
+# grouping is already unambiguous; on a real assignment it fired 18 times with
+# no true positives, which would keep `make lint` permanently red.
+CmdLine {
+  -n3
 }

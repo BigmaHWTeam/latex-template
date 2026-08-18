@@ -1,52 +1,87 @@
 # LaTeX Homework Template
 
-This repository provides a LaTeX template for creating homework assignments.
-
-## Overview
-
-This template is designed to be easily configurable for various assignments. The main file can be renamed to reflect the specific assignment you are working on. The template is structured to separate content, formatting, and preamble, making it easy to manage your work.
+A LaTeX template for homework assignments, built around numbered `problem` /
+`subproblem` boxes that break cleanly across pages.
 
 ## File Structure
 
-- `assignment.tex`: The main LaTeX file. You can rename this file.
-- `preamble.tex`: Contains all the `\usepackage` commands and document setup.
-- `format.tex`: Defines the visual formatting of the document, including theorem and problem environments.
-- `header.tex`: Defines the header of the document, including name, class, and assignment details.
-- `problem1.tex`: An example file for writing a problem and its solution. You can create more `problemX.tex` files and include them in your main `.tex` file.
-- `Makefile`: Contains the build instructions for the project.
-- `.latexmkrc`: Configuration file for `latexmk`.
-- `.github/workflows/build.yml`: GitHub Actions workflow for automatically building the PDF.
+- `assignment.tex`: Main file. Holds the document metadata (name, class,
+  assignment, date, keywords) and includes the problem files. Renameable.
+- `preamble.tex`: `\usepackage` commands and package configuration.
+- `format.tex`: The `problem` and `subproblem` environments, their equation
+  numbering, and the page-break continuation notes.
+- `header.tex`: Title block, page header, and footer.
+- `problem1.tex`: Example problem. Add `problem2.tex`, etc. and `\input` them.
+- `Makefile`: Build, lint, format, and watch targets.
+- `.latexmkrc`: latexmk configuration. Sends all output to `build/`.
+- `.chktexrc` / `.latexindent.yaml`: Linter and formatter configuration.
+- `.github/workflows/build.yml`: CI build via the repo's own flake.
 
-## How to Use
+## Setup
 
-1.  **Customize Metadata (Optional)**:
-    Open `header.tex` and edit the variables (`\myname`, `\classname`, etc.) to set your name, class, and other details.
+The flake provides texlive, latexmk, pandoc, chktex, and latexindent:
 
-2.  **Rename the Main File (Optional)**:
-    If you want to rename `assignment.tex` (e.g., to `homework1.tex`), you will need to update the `MAIN_FILE` variable in two places:
-    - **Makefile**: Change `MAIN_FILE ?= assignment` to `MAIN_FILE ?= homework1`.
-    - **`.github/workflows/build.yml`**: Change `MAIN_FILE: assignment` to `MAIN_FILE: homework1`.
+```bash
+nix develop        # or `direnv allow`, via .envrc
+```
 
-## Building the PDF
+## Usage
 
-To compile the LaTeX project and generate a PDF, you can use the included `Makefile`.
+1. **Set the metadata** at the top of `assignment.tex` (`\myname`,
+   `\classname`, `\assignment`, `\assigndate`, `\keywords`). These feed the
+   title block, the page header, and the PDF metadata.
 
-- **To build the default file (`assignment.pdf`)**:
-  ```bash
-  make
-  ```
+2. **Write problems** using the `problem` and `subproblem` environments:
 
-- **To build a differently named file**:
-  You can specify the main file by passing the `MAIN_FILE` variable to the `make` command.
-  ```bash
-  make all MAIN_FILE=homework1
-  ```
-  This will generate `homework1.pdf`.
+   ```latex
+   \begin{problem}{}{}
+     Equations here are numbered (1.1), (1.2), ...
+     \begin{subproblem}{}{part-a}
+       And here (1.a.1), (1.a.2), ...
+     \end{subproblem}
+   \end{problem}
+   ```
+
+   Label a box with its **third** argument, not `\label`, and reference it as
+   `\cref{problem:part-a}` or `\cref{subproblem:part-a}`. A `\label` inside the
+   body records an empty number, because tcolorbox does not set
+   `\@currentlabel` there.
+
+3. **Renaming the main file** needs no configuration. The Makefile detects
+   `assignment.tex`, then `hw*.tex`, then `*-hw*.tex`, and CI globs
+   `build/*.pdf`. Override explicitly with `make MAIN_FILE=homework1`.
+
+## Building
+
+```bash
+make            # build build/<name>.pdf
+make watch      # continuous rebuild and preview (latexmk -pvc)
+make lint       # chktex
+make format     # rewrite sources with latexindent (review the diff)
+make clean
+make FORMAT=docx
+```
+
+`make FORMAT=docx` is a rough draft only. pandoc cannot see inside the
+tcolorbox environments, so the problem boxes, their numbering, and display math
+inside them are **dropped from the .docx**. Never submit it unchecked.
+
+## Layout note
+
+`geometry` is loaded with `includeheadfoot` so the 3-line page header stays
+inside the 1in margin instead of landing in a printer's unprintable edge. The
+cost is body height (`textheight` 564pt rather than 650pt). To reclaim it,
+shorten the header to one line and drop `headheight` to 14pt, or use
+`margin=0.75in`.
 
 ## CI/CD
 
-This repository includes a GitHub Actions workflow in `.github/workflows/build.yml` that automatically builds the PDF of your assignment. The workflow is triggered on pushes and pull requests to all branches, and also when a new tag is created.
+`.github/workflows/build.yml` builds the PDF on every push and tag using
+`nix develop --command make`, so CI and local builds use identical texlive.
+Tagged pushes create a release with the PDF attached.
 
-When a tag is pushed, the workflow will create a new release and upload the compiled PDF as a release artifact.
+Renovate keeps `flake.lock` and the action versions current. `ignoreTests` is
+`false`, so a toolchain bump that breaks compilation will not automerge.
 
-> **Important:** For the CI/CD workflow to function correctly, you must enable "Read and Write permissions" for workflows in your GitHub repository settings. You can find this setting under `Settings > Actions > General > Workflow permissions`.
+> **Important:** CI needs "Read and Write permissions" for workflows, under
+> `Settings > Actions > General > Workflow permissions`.

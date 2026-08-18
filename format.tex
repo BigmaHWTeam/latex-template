@@ -25,14 +25,14 @@
 % content is set, so which part straddles the break is not knowable here.
 \newcommand{\problemcontinues}[1]{%
   \draw[black!35, dashed, line width = 0.3pt]
-  (frame.south west) -- (frame.south east);%
+  (frame.south west) -- (frame.south east);% chktex 8
   \node[anchor = north east, font = \scriptsize\itshape, text = black!60,
     inner sep = 0pt] at ([yshift = -4pt] frame.south east)
   {Problem #1 continues on next page};%
 }
 \newcommand{\problemcontinued}[1]{%
   \draw[black!35, dashed, line width = 0.3pt]
-  (frame.north west) -- (frame.north east);%
+  (frame.north west) -- (frame.north east);% chktex 8
   \node[anchor = south west, font = \scriptsize\itshape, text = black!60,
     inner sep = 0pt] at ([yshift = 3pt] frame.north west)
   {Problem #1 continued from previous page};%
@@ -65,11 +65,12 @@
 \newtcbtheorem[number within = tcb@cnt@problem, number format = \alph]{subproblem}{Problem}%
 {enhanced,
   before upper = {\resetequationnumbering{\thetcb@cnt@problem.\alph{tcb@cnt@subproblem}}},
-  % A breakable box nested in a breakable box needs this, or the part is
-  % pushed whole to the next page. The enclosing problem draws the
-  % continuation note; a part drawing its own would print a second, colliding
-  % note whenever a break lands inside a part.
-  enforce breakable,
+  % Plain `breakable`, not `enforce breakable`. Enforcing it made tcolorbox
+  % end a part a few lines in whenever a tall display followed, stranding most
+  % of the page as blank space and warning that the upper box part had become
+  % overfull. Parts still split across pages without it, and the enclosing
+  % problem draws the continuation note either way; a part drawing its own
+  % would print a second, colliding note.
   colback = white,
   colbacktitle = white,
   coltitle = black,

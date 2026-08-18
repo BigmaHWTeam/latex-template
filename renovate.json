@@ -4,10 +4,12 @@
     "config:best-practices"
   ],
   "automerge": true,
-  "automergeSchedule": ["at any time"],
+  "automergeSchedule": [
+    "at any time"
+  ],
   "automergeStrategy": "merge-commit",
   "automergeType": "branch",
-  "ignoreTests": true,
+  "ignoreTests": false,
   "nix": {
     "enabled": true
   },
@@ -16,11 +18,15 @@
   },
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": ["at any time"]
+    "schedule": [
+      "at any time"
+    ]
   },
   "packageRules": [
     {
-      "matchManagers": ["nix"],
+      "matchManagers": [
+        "nix"
+      ],
       "groupName": "nix flake inputs"
     }
   ]

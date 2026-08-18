@@ -55,12 +55,16 @@
                   amsfonts
                   appendix
                   biblatex
+                  chktex
                   cleveref
                   csquotes
                   doublestroke
                   enumitem
                   esint
-                  framed
+                  lastpage
+                  latexindent
+                  mathtools
+                  microtype
                   pdfcol
                   physics
                   rsfs

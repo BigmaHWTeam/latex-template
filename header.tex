@@ -1,14 +1,25 @@
 % !TEX root = assignment.tex
 % ==================================================
-% Document Metadata
+% Header, Footer, and Title Setup
 % ==================================================
-% Change these variables to set the document's metadata.
-
-% ==================================================
-% Header and Title Setup
-% ==================================================
-% These commands use the variables defined above.
+% These commands use the metadata defined in the main .tex file.
 \title{\assignment}
 \author{\myname}
+\date{\assigndate} % Without this, \maketitle prints \today and disagrees with
+                   % the date in the page header.
+
 \lhead{\myname}
-\rhead{\classname \\ \assigndate \\ \assignment}
+\rhead{\shortstack[r]{\classname\\\assigndate\\\assignment}}
+
+% "1 of 3" rather than a bare page number, so a truncated submission is
+% obvious to both you and the grader.
+\cfoot{\thepage\ of~\pageref*{LastPage}}
+
+% \maketitle forces the `plain` page style on page 1, so without this the first
+% page shows a bare page number and loses the "n of m" footer entirely, which
+% on a one-page assignment means it never appears at all. The running header is
+% deliberately left off page 1: the title block already says the same thing.
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \cfoot{\thepage\ of~\pageref*{LastPage}}%
+}

@@ -2,6 +2,9 @@
 % ==================================================
 % Document Class and Global Options
 % ==================================================
+% extarticle, not article: it is what makes 9pt, 14pt, 17pt and 20pt
+% available if you ever need to change the body size. At 11pt it behaves
+% identically to article.
 \documentclass[letterpaper, 11pt]{extarticle}
 
 % ==================================================
@@ -9,20 +12,35 @@
 % ==================================================
 \usepackage[english]{babel} % Language-specific settings
 \usepackage{csquotes}       % Context-sensitive quotation marks
+\usepackage{microtype}      % Margin kerning and font expansion. No config
+                            % needed; largest single improvement to how the
+                            % justified text reads, and removes most overfull
+                            % boxes on its own.
 % \usepackage{fontspec}     % For custom fonts with XeLaTeX or LuaLaTeX
 
 % ==================================================
 % Page Layout
 % ==================================================
-\usepackage[margin=1in]{geometry} % Set page margins
+% headheight belongs to geometry, not a later \setlength. geometry sizes the
+% text block when it loads, so \setlength{\headheight}{42pt} afterwards pushes
+% the body down 30pt without shrinking it, leaving a 1.41in top margin against
+% a 0.59in bottom one.
+%
+% includeheadfoot makes the 1in margin contain the header and footer, so the
+% 3-line header cannot land in a printer's unprintable edge. It costs body
+% height (textheight 564pt vs 650pt); reclaim it by shortening the header to
+% one line and dropping headheight to 14pt, or by going to margin=0.75in.
+\usepackage[margin=1in, includeheadfoot, headheight=42pt, headsep=14pt]{geometry}
 \usepackage{fancyhdr}             % Custom headers and footers
+\usepackage{lastpage}             % \pageref{LastPage} for the "n of m" footer
 \pagestyle{fancy}
-\setlength{\headheight}{42pt}      % Adjust header height for fancyhdr
 
 % ==================================================
 % Math Packages
 % ==================================================
 \usepackage{amsmath}    % Core math functionality
+\usepackage{mathtools}  % amsmath fixes and extensions: \coloneqq,
+                        % \DeclarePairedDelimiter, better \underbrace spacing
 \usepackage{amsthm}     % Theorem environments
 \usepackage{amssymb}    % More math symbols
 \usepackage{amsfonts}   % Math fonts
@@ -31,13 +49,15 @@
 \usepackage{esint}      % More integrals
 \usepackage{mathrsfs}   % Script fonts
 \usepackage{physics}    % Physics notations
+% Do not add siunitx alongside physics: both define \qty and the second one
+% loaded wins, silently breaking whichever you were relying on. If you need
+% units, drop physics for physics2 or derivative first.
 
 % ==================================================
 % Document Structure and Formatting
 % ==================================================
 \usepackage[page, title]{appendix}     % Appendix handling
 \usepackage[shortlabels]{enumitem} % Advanced lists
-\usepackage{framed}             % Framed environments
 \usepackage{multicol}           % Multiple columns
 \usepackage{titlesec}           % Section title formatting
 \usepackage[many]{tcolorbox}    % Colored text boxes

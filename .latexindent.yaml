@@ -1,0 +1,19 @@
+# latexindent settings for this repository.
+# Passed explicitly via `-l=.latexindent.yaml` in the Makefile rather than
+# relying on latexindent's default lookup names.
+
+# latexindent defaults to a tab. These sources are 2-space indented, and
+# without this every file fails `make lint` on indentation alone.
+defaultIndent: "  "
+
+# The tcolorbox/tikz macros in format.tex are hand-wrapped for readability;
+# leave existing line breaks alone rather than reflowing them.
+modifyLineBreaks:
+  preserveBlankLines: 1
+
+# Teach latexindent about the tcbtheorem environments from format.tex. Without
+# these it strips the indentation from every problem body, because it has no
+# rule for an environment whose \begin carries two trailing argument groups.
+indentRules:
+  problem: "  "
+  subproblem: "  "

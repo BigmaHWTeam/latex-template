@@ -1,12 +1,19 @@
 % !TEX root=assignment.tex
-\def\assignment{Template}
-\def\myname{Your Name}
-\def\classname{Class Name}
-\def\assigndate{\today}
-\def\keywords{Homework, College, Keywords}
+% ==================================================
+% Document Metadata
+% ==================================================
+% \newcommand rather than \def: it errors on a name collision instead of
+% silently overwriting a command some package already owns.
+\newcommand{\assignment}{Template}
+\newcommand{\myname}{Your Name}
+\newcommand{\classname}{Class Name}
+\newcommand{\assigndate}{\today}
+\newcommand{\keywords}{Homework, College, Keywords}
+
 \input{preamble}
 \input{format}
-\input{header} 
+\input{header}
+
 \begin{document}
 \maketitle
 \section*{A Section}
