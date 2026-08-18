@@ -1,4 +1,3 @@
-% !TEX root = assignment.tex
 % Adjust spacing after the chapter title
 \titlespacing*{\chapter}{0cm}{-2.0cm}{0.50cm}
 \titlespacing*{\section}{0cm}{0.50cm}{0.25cm}
@@ -24,16 +23,16 @@
 % problem, never the part: a broken box draws its overlays only after its whole
 % content is set, so which part straddles the break is not knowable here.
 \newcommand{\problemcontinues}[1]{%
-  \draw[black!35, dashed, line width = 0.3pt]
+  \draw[accent!55, dashed, line width = 0.3pt]
   (frame.south west) -- (frame.south east);% chktex 8
-  \node[anchor = north east, font = \scriptsize\itshape, text = black!60,
+  \node[anchor = north east, font = \scriptsize\itshape, text = accentdark!75,
     inner sep = 0pt] at ([yshift = -4pt] frame.south east)
   {Problem #1 continues on next page};%
 }
 \newcommand{\problemcontinued}[1]{%
-  \draw[black!35, dashed, line width = 0.3pt]
+  \draw[accent!55, dashed, line width = 0.3pt]
   (frame.north west) -- (frame.north east);% chktex 8
-  \node[anchor = south west, font = \scriptsize\itshape, text = black!60,
+  \node[anchor = south west, font = \scriptsize\itshape, text = accentdark!75,
     inner sep = 0pt] at ([yshift = 3pt] frame.north west)
   {Problem #1 continued from previous page};%
 }
@@ -48,12 +47,12 @@
   overlay middle = {\problemcontinued{\thetcb@cnt@problembox}%
     \problemcontinues{\thetcb@cnt@problembox}},
   overlay last = {\problemcontinued{\thetcb@cnt@problembox}},
-  colback = black!5, %white,
-  colbacktitle = black!5,
-  coltitle = black,
+  colback = accent!6,
+  colbacktitle = accent!16,
+  coltitle = accentdark,
   boxrule = 0pt,
   frame hidden,
-  borderline west = {0.5mm}{0.0mm}{black},
+  borderline west = {0.9mm}{0.0mm}{accent},
   fonttitle = \bfseries\sffamily,
   breakable,
   before skip = 3ex,
@@ -82,6 +81,8 @@
 % (measured on this assignment: 9 pages, or 16 with \allowdisplaybreaks, against
 % 6). With one box level the content flows normally and \allowdisplaybreaks can
 % finally take effect, because the part is no longer an unsplittable unit.
+\newlength{\subprobindent}
+\setlength{\subprobindent}{1.5em}
 \newcounter{subproblem}[tcb@cnt@problembox]
 \renewcommand{\thesubproblem}{\thetcb@cnt@problembox.\alph{subproblem}}
 \NewDocumentEnvironment{subproblem}{O{}O{}}{%
@@ -91,8 +92,13 @@
   % \begin{subproblem}[][foo] is referenced as \cref{subproblem:foo}.
   \if\relax\detokenize{#2}\relax\else\label{subproblem:#2}\fi
   \resetequationnumbering{\thesubproblem}%
-  \leftskip=1.5em\relax
-  \noindent{\bfseries\sffamily Problem \thesubproblem%
+  % \leftskip alone shifts the text but leaves \linewidth at full width, so
+  % anything sized to \linewidth inside a part (the answer box) overflowed the
+  % measure by exactly this indent. Narrow \linewidth to match.
+  \leftskip=\subprobindent\relax
+  \advance\linewidth by -\subprobindent\relax % chktex 1
+  \noindent{\color{accent}\rule[0.12em]{0.9em}{0.09em}}\hspace{0.45em}%
+  {\bfseries\sffamily\color{accentdark}Problem \thesubproblem%
     \if\relax\detokenize{#1}\relax\else: #1\fi}%
   % Keep the heading with at least the start of its part.
   \par\nobreak\vspace{0.5ex}\nobreak%
@@ -115,4 +121,23 @@
 \crefname{subproblem}{Problem}{Problems}
 \Crefname{tcb@cnt@problembox}{Problem}{Problems}
 \Crefname{subproblem}{Problem}{Problems}
+% The closing result of a part, so it is findable when flipping pages.
+%
+% Deliberately unbreakable. This box sits inside the breakable problem box, and
+% a breakable box nested in a breakable box is relocated whole rather than split
+% (see the subproblem note above). For a one or two line result that is the
+% behaviour we want anyway, and it keeps the answer intact. Do not make it
+% breakable to "fix" a tight page: that reintroduces the stranded-page problem.
+\newtcolorbox{answer}{
+  enhanced,
+  unbreakable,
+  sharp corners,
+  colback = accent!12,
+  colframe = accent!55,
+  boxrule = 0.4pt,
+  left = 2.5mm, right = 2.5mm, top = 1.4mm, bottom = 1.4mm,
+  before skip = 1.6ex,
+  after skip = 1.6ex,
+}
+
 \makeatother

@@ -62,6 +62,7 @@
                   biblatex
                   chktex
                   cleveref
+                  colortbl
                   csquotes
                   doublestroke
                   enumitem
@@ -76,6 +77,7 @@
                   pdfcol
                   physics
                   rsfs
+                  siunitx
                   tikzfill
                   tcolorbox
                   titlesec
