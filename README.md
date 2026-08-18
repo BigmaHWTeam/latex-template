@@ -15,6 +15,8 @@ A LaTeX template for homework assignments, built around numbered `problem` /
 - `Makefile`: Build, lint, format, and watch targets.
 - `.latexmkrc`: latexmk configuration. Sends all output to `build/`.
 - `.chktexrc` / `.latexindent.yaml`: Linter and formatter configuration.
+- `.pre-commit-config.yaml`: Runs `make lint` before each commit.
+- `.editorconfig`: Indentation and whitespace rules.
 - `.github/workflows/build.yml`: CI build via the repo's own flake.
 
 ## Setup
@@ -24,6 +26,9 @@ The flake provides texlive, latexmk, pandoc, chktex, and latexindent:
 ```bash
 nix develop        # or `direnv allow`, via .envrc
 ```
+
+Entering the shell installs the pre-commit hook, so `make lint` gates commits.
+The Python virtualenv is only built when `requirements.txt` is non-empty.
 
 ## Usage
 
@@ -65,6 +70,18 @@ make FORMAT=docx
 `make FORMAT=docx` is a rough draft only. pandoc cannot see inside the
 tcolorbox environments, so the problem boxes, their numbering, and display math
 inside them are **dropped from the .docx**. Never submit it unchecked.
+
+## Editor integration
+
+`.latexmkrc` passes `-synctex=1`, and `texlab.toml` wires forward search to
+Okular, so the editor can jump to the corresponding spot in the PDF.
+
+For the reverse direction, set Okular's editor command under
+`Settings > Configure Okular > Editor`. For Neovim with a listening socket:
+
+```
+nvim --server /tmp/nvim.pipe --remote-send "<Esc>:e %f<CR>:%l<CR>"
+```
 
 ## Layout note
 

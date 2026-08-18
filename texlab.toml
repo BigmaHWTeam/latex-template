@@ -2,3 +2,10 @@
 executable = "make"
 args = []
 onSave = true
+
+# Forward search into Okular. %p is the built PDF, %l the cursor line, %f the
+# current source file; --unique reuses the open window instead of stacking new
+# ones on every jump. Needs -synctex=1, which .latexmkrc sets.
+[forwardSearch]
+executable = "okular"
+args = ["--unique", "file:%p#src:%l %f"]

@@ -10,6 +10,14 @@
 % ==================================================
 % Language and Typography
 % ==================================================
+% T1 output encoding plus the Latin Modern fonts that cover it. Without these
+% pdflatex falls back to OT1, which composes accented letters out of two
+% glyphs: "naive" with a diaeresis extracts from the PDF as a dotless i plus a
+% combining accent rather than a single i-with-diaeresis, breaking copy-paste,
+% PDF search, and hyphenation of any word carrying an accent.
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
 \usepackage[english]{babel} % Language-specific settings
 \usepackage{csquotes}       % Context-sensitive quotation marks
 \usepackage{microtype}      % Margin kerning and font expansion. No config

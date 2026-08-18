@@ -1,0 +1,15 @@
+# Local hooks only, on purpose: everything runs through the Makefile, so there
+# is one definition of what linting means and no hook revisions to keep pinned.
+repos:
+  - repo: local
+    hooks:
+      - id: chktex
+        name: chktex
+        # Wrapped in `nix develop` rather than calling `make lint` directly.
+        # chktex only exists inside the devshell, so a bare `make lint` fails
+        # with "chktex: No such file or directory" whenever a commit is made
+        # from a plain shell or a GUI client, blocking it for the wrong reason.
+        entry: nix develop --command make lint
+        language: system
+        types: [tex]
+        pass_filenames: false

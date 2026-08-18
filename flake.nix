@@ -31,12 +31,16 @@
             pkgs.imagemagick
             pkgs.python3Packages.virtualenv
           ];
+          # Only stand up a virtualenv when there is something to install into
+          # it. mkShell concatenates the shellHooks of everything in
+          # inputsFrom, so the unconditional version rebuilt a venv on every
+          # `nix develop` even in a repo whose requirements.txt is empty.
           shellHook = ''
-            if [ ! -d ".venv" ] || ! .venv/bin/python --version &>/dev/null; then
-              virtualenv .venv
-            fi
-            source .venv/bin/activate
             if [ -s "requirements.txt" ]; then
+              if [ ! -d ".venv" ] || ! .venv/bin/python --version &>/dev/null; then
+                virtualenv .venv
+              fi
+              source .venv/bin/activate
               pip install -r requirements.txt
             fi
           '';
@@ -46,6 +50,7 @@
           packages = [
             pkgs.ghostscript
             pkgs.pandoc
+            pkgs.pre-commit
             pkgs.yq-go
             pkgs.zstd
             pkgs.texlivePackages.latexmk
@@ -74,6 +79,15 @@
                 ]
             ))
           ];
+          # Install the git hook on shell entry so `make lint` runs before a
+          # commit without anyone having to remember `pre-commit install`.
+          # Guarded on .git so this is a no-op in an unversioned copy.
+          shellHook = ''
+            if [ -d .git ] && [ -f .pre-commit-config.yaml ] \
+              && [ ! -f .git/hooks/pre-commit ]; then
+              pre-commit install >/dev/null 2>&1 || true
+            fi
+          '';
         };
       in {
         devShells = {
