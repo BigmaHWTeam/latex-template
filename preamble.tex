@@ -16,7 +16,11 @@
 % combining accent rather than a single i-with-diaeresis, breaking copy-paste,
 % PDF search, and hyphenation of any word carrying an accent.
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
+% Libertinus for text with its matching Type1 math. Note the style file is
+% libertinus-type1.sty, not libertinus.sty. It needs fontaxes, which the
+% flake pulls in; without it the build dies on a missing fontaxes.sty.
+\usepackage{libertinus-type1}
+\usepackage{libertinust1math}
 
 \usepackage[english]{babel} % Language-specific settings
 \usepackage{csquotes}       % Context-sensitive quotation marks
@@ -49,6 +53,10 @@
 \usepackage{amsmath}    % Core math functionality
 \usepackage{mathtools}  % amsmath fixes and extensions: \coloneqq,
                         % \DeclarePairedDelimiter, better \underbrace spacing
+% Allow page breaks between rows of a display, but penalise them so they
+% happen only when the alternative is a badly underfull page. Without this
+% a long align is an unsplittable block.
+\allowdisplaybreaks[1]
 \usepackage{amsthm}     % Theorem environments
 \usepackage{amssymb}    % More math symbols
 \usepackage{amsfonts}   % Math fonts

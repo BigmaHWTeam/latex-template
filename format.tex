@@ -38,16 +38,16 @@
   {Problem #1 continued from previous page};%
 }
 
-\newtcbtheorem[]{problem}{Problem}%
+\newtcbtheorem[]{problembox}{Problem}%
 {enhanced,
-  before upper = {\resetequationnumbering{\thetcb@cnt@problem}},
+  before upper = {\resetequationnumbering{\thetcb@cnt@problembox}},
   % Set per segment, not via `overlay first and middle` plus
   % `overlay middle and last`: those both \let the middle overlay, so the
   % second one silently wins and middle pages lose a note.
-  overlay first = {\problemcontinues{\thetcb@cnt@problem}},
-  overlay middle = {\problemcontinued{\thetcb@cnt@problem}%
-    \problemcontinues{\thetcb@cnt@problem}},
-  overlay last = {\problemcontinued{\thetcb@cnt@problem}},
+  overlay first = {\problemcontinues{\thetcb@cnt@problembox}},
+  overlay middle = {\problemcontinued{\thetcb@cnt@problembox}%
+    \problemcontinues{\thetcb@cnt@problembox}},
+  overlay last = {\problemcontinued{\thetcb@cnt@problembox}},
   colback = black!5, %white,
   colbacktitle = black!5,
   coltitle = black,
@@ -60,37 +60,59 @@
   after skip = 3ex
 }{problem}
 
-% Parts are lettered within their problem: Problem 3.a, Problem 3.b, ...
-% Change `number format` to \arabic, \roman, \Alph, ... for other schemes.
-\newtcbtheorem[number within = tcb@cnt@problem, number format = \alph]{subproblem}{Problem}%
-{enhanced,
-  before upper = {\resetequationnumbering{\thetcb@cnt@problem.\alph{tcb@cnt@subproblem}}},
-  % Plain `breakable`, not `enforce breakable`. Enforcing it made tcolorbox
-  % end a part a few lines in whenever a tall display followed, stranding most
-  % of the page as blank space and warning that the upper box part had become
-  % overfull. Parts still split across pages without it, and the enclosing
-  % problem draws the continuation note either way; a part drawing its own
-  % would print a second, colliding note.
-  colback = white,
-  colbacktitle = white,
-  coltitle = black,
-  boxrule = 0pt,
-  frame hidden,
-  borderline west = {0.25mm}{0.0mm}{black!40},
-  fonttitle = \bfseries\sffamily,
-  breakable,
-  before skip = 2ex,
-  after skip = 2ex
-}{subproblem}
+% Both arguments are optional: \begin{problem}, \begin{problem}[Title], or
+% \begin{problem}[Title][label]. Use [][label] for a label with no title.
+%
+% \newtcbtheorem insists on two mandatory arguments, so it generates
+% `problembox` and this wraps it. The box cannot simply be \let to another name
+% and redefined in place: the environment it generates is a LaTeX3 document
+% command that resolves its own argument spec by name, so the alias still
+% dispatches to whatever `problem` currently means, and the wrapper recurses
+% until the input stack overflows.
+\NewDocumentEnvironment{problem}{O{}O{}}
+{\begin{problembox}{#1}{#2}}
+{\end{problembox}}
 
-% cleveref keys names off the counter, which tcolorbox names tcb@cnt@<env>
-% rather than <env>. Naming `problem` and `subproblem` here would leave \cref
-% printing `??` in front of an otherwise correct number.
-% Label a box with its third argument, not \label: \begin{subproblem}{}{foo}
-% is referenced as \cref{subproblem:foo}. A \label inside the body records an
-% empty number, because tcolorbox does not set \@currentlabel there.
-\crefname{tcb@cnt@problem}{Problem}{Problems}
-\crefname{tcb@cnt@subproblem}{Problem}{Problems}
-\Crefname{tcb@cnt@problem}{Problem}{Problems}
-\Crefname{tcb@cnt@subproblem}{Problem}{Problems}
+% Parts are lettered within their problem: Problem 3.a, Problem 3.b, ...
+%
+% A plain environment, deliberately not a nested tcbtheorem. A breakable
+% tcolorbox inside a breakable tcolorbox behaves atomically: when the part does
+% not fit it is moved whole to the next page, which stranded about two inches at
+% the bottom of pages. `enforce breakable` does split it, but in absurd places
+% (measured on this assignment: 9 pages, or 16 with \allowdisplaybreaks, against
+% 6). With one box level the content flows normally and \allowdisplaybreaks can
+% finally take effect, because the part is no longer an unsplittable unit.
+\newcounter{subproblem}[tcb@cnt@problembox]
+\renewcommand{\thesubproblem}{\thetcb@cnt@problembox.\alph{subproblem}}
+\NewDocumentEnvironment{subproblem}{O{}O{}}{%
+  \par\addvspace{2ex}%
+  \refstepcounter{subproblem}%
+  % Second optional argument is the label:
+  % \begin{subproblem}[][foo] is referenced as \cref{subproblem:foo}.
+  \if\relax\detokenize{#2}\relax\else\label{subproblem:#2}\fi
+  \resetequationnumbering{\thesubproblem}%
+  \leftskip=1.5em\relax
+  \noindent{\bfseries\sffamily Problem \thesubproblem%
+    \if\relax\detokenize{#1}\relax\else: #1\fi}%
+  % Keep the heading with at least the start of its part.
+  \par\nobreak\vspace{0.5ex}\nobreak%
+}{%
+  \par\addvspace{2ex}%
+}
+
+% cleveref keys names off the counter name. `problem` is still a tcbtheorem,
+% and tcolorbox names its counter after the generated environment, so that
+% is the name to use; getting it wrong leaves \cref printing `??` in front of an
+% otherwise correct number. `subproblem` is a plain environment with its own
+% counter, so it is named directly.
+%
+% Label either one with its second optional argument rather than \label:
+% \begin{subproblem}[][foo] is referenced as \cref{subproblem:foo}. For
+% `problem` a \label inside the body records an empty number, because tcolorbox
+% does not set \@currentlabel there; `subproblem` uses \refstepcounter and so
+% does not have that restriction.
+\crefname{tcb@cnt@problembox}{Problem}{Problems}
+\crefname{subproblem}{Problem}{Problems}
+\Crefname{tcb@cnt@problembox}{Problem}{Problems}
+\Crefname{subproblem}{Problem}{Problems}
 \makeatother

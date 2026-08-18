@@ -8,7 +8,9 @@
 \date{\assigndate} % Without this, \maketitle prints \today and disagrees with
                    % the date in the page header.
 
-\lhead{\myname}
+% Phantoms of the right-hand lines give both stacks the same height, so their
+% first lines align. A bare \\{} pair collapses and \strut overshoots.
+\lhead{\shortstack[l]{\myname\\\vphantom{\assigndate}\\\vphantom{\assignment}}}
 \rhead{\shortstack[r]{\classname\\\assigndate\\\assignment}}
 
 % "1 of 3" rather than a bare page number, so a truncated submission is

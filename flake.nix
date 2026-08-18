@@ -66,8 +66,11 @@
                   doublestroke
                   enumitem
                   esint
+                  fontaxes
                   lastpage
                   latexindent
+                  libertinus-type1
+                  libertinust1math
                   mathtools
                   microtype
                   pdfcol
