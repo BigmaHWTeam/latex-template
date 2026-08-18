@@ -73,15 +73,35 @@ inside them are **dropped from the .docx**. Never submit it unchecked.
 
 ## Editor integration
 
-`.latexmkrc` passes `-synctex=1`, and `texlab.toml` wires forward search to
-Okular, so the editor can jump to the corresponding spot in the PDF.
+`.latexmkrc` passes `-synctex=1`, so `build/<name>.synctex.gz` is produced and
+the editor and viewer can map between source and page.
 
-For the reverse direction, set Okular's editor command under
-`Settings > Configure Okular > Editor`. For Neovim with a listening socket:
+Note that `texlab.toml` is **not** read by texlab; it has no support for that
+file. Configure texlab through your editor's LSP settings instead. For Neovim,
+forward search needs `forwardSearch.executable` set to your viewer and
+`build.pdfDirectory = "build"`, because `$out_dir` puts the PDF somewhere other
+than beside the source.
+
+Inverse search, from the viewer back to the source, is configured in Okular
+under `Settings > Configure Okular > Editor`. Choose Custom Text Editor:
 
 ```
-nvim --server /tmp/nvim.pipe --remote-send "<Esc>:e %f<CR>:%l<CR>"
+texlab inverse-search --input %f --line1 %l
 ```
+
+This routes through the running texlab, which sends `window/showDocument` to
+the editor, so it needs no fixed editor socket. Okular's `%l` is one-based,
+matching `--line1`.
+
+Trigger it with **Shift and left click** on the PDF. Okular requires the Browse
+tool to be active for this (`Tools > Browse`); in Selection mode the click does
+nothing. The document must also have been compiled successfully, so the
+synctex file exists.
+
+texlab binds `$XDG_RUNTIME_DIR/texlab.sock` and does not remove it on exit. A
+new texlab rebinds over the stale file, so that is harmless, but the socket
+path is shared: with several editor instances open, inverse search reaches
+whichever texlab bound most recently.
 
 ## Layout note
 
