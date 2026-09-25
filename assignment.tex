@@ -5,6 +5,9 @@
 % silently overwriting a command some package already owns.
 \newcommand{\assignment}{Template}
 \newcommand{\myname}{Your Name}
+% Roster for the page 1 header only. Middle dots rather than commas: they stay
+% legible at footnotesize and do not read as a sentence.
+\newcommand{\members}{Member One \textperiodcentered\ Member Two}
 \newcommand{\classname}{Class Name}
 \newcommand{\assigndate}{\today}
 \newcommand{\keywords}{Homework, College, Keywords}
@@ -14,7 +17,5 @@
 \input{header}
 
 \begin{document}
-\maketitle
-\section*{A Section}
 \input{problem1}
 \end{document}

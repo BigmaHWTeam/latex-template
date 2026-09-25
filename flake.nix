@@ -1,5 +1,5 @@
 {
-  description = "A devshell flake with latex, python, and assignment profiles";
+  description = "A devshell flake with latex, python, R, and assignment profiles";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -46,6 +46,23 @@
           '';
           env = fhsEnvironment;
         };
+        rEnv = pkgs.rWrapper.override {
+          packages = with pkgs.rPackages; [
+            dplyr
+            ggplot2
+            knitr
+            languageserver
+            qcc
+            readr
+            tidyr
+          ];
+        };
+        r = pkgs.mkShell {
+          packages = [
+            rEnv
+          ];
+          env = fhsEnvironment;
+        };
         latex = pkgs.mkShell {
           packages = [
             pkgs.ghostscript
@@ -81,6 +98,7 @@
                   tikzfill
                   tcolorbox
                   titlesec
+                  xfrac
                 ]
             ))
           ];
@@ -98,10 +116,12 @@
         devShells = {
           python = python;
           latex = latex;
+          r = r;
           default = pkgs.mkShell {
             inputsFrom = [
               python
               latex
+              r
             ];
             env = fhsEnvironment;
           };

@@ -7,14 +7,50 @@
 \date{\assigndate} % Without this, \maketitle prints \today and disagrees with
                    % the date in the page header.
 
-% Phantoms of the right-hand lines give both stacks the same height, so their
-% first lines align. A bare \\{} pair collapses and \strut overshoots.
-\lhead{\shortstack[l]{\myname\\\vphantom{\assigndate}\\\vphantom{\assignment}}}
-\rhead{\shortstack[r]{\classname\\\assigndate\\\assignment}}
+% The right-hand stack is identical on every page, so it is defined once and
+% shared by both page styles below.
+\newcommand{\headright}{\shortstack[r]{\classname\\\assigndate\\\assignment}}
+
+% Left-hand stack. Its optional argument is an extra line set under the team
+% name: the roster on page 1, empty on every page after.
+%
+% Same line count as \headright, so the two stacks align at the top rather than
+% \myname sitting level with the stack's last line. Phantoms of the right-hand
+% lines, so both stacks are the same height and their first lines align. Plain
+% \\ pairs collapse and \strut overshoots.
+%
+% The roster goes in a zero-width box so its smaller font cannot widen the
+% stack, with a full-size phantom behind it so the line keeps the height of
+% \assigndate opposite and the alignment survives. That also means the roster
+% is free to grow rightwards: it has the width between the two stacks to spend,
+% but nothing stops it overprinting \headright if it outgrows that, so check
+% page 1 after adding names.
+\newcommand{\headleft}[1][]{%
+  \shortstack[l]{%
+    \myname\\
+    \makebox[0pt][l]{\footnotesize\color{accentdark!85}#1}\vphantom{\assigndate}\\
+    \vphantom{\assignment}}}
+
+\lhead{\headleft}
+\rhead{\headright}
 
 % "1 of 3" rather than a bare page number, so a truncated submission is
 % obvious to both you and the grader.
 \cfoot{\thepage\ of~\pageref*{LastPage}}
+
+% Page 1 names the whole team; later pages carry the team name alone, which is
+% enough to identify a loose sheet. Still a three-line stack, so headheight is
+% unchanged and fancyhdr raises no "\headheight is too small" warning.
+\fancypagestyle{firstpage}{%
+  \fancyhf{}%
+  \lhead{\headleft[\members]}%
+  \rhead{\headright}%
+  \cfoot{\thepage\ of~\pageref*{LastPage}}%
+}
+% Applied here rather than in assignment.tex, so the page furniture stays in
+% one file. \thispagestyle acts on the current page, which at the start of the
+% document is page 1.
+\AtBeginDocument{\thispagestyle{firstpage}}
 
 % \maketitle forces the `plain` page style on page 1, so without this the first
 % page shows a bare page number and loses the "n of m" footer entirely, which

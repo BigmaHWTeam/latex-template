@@ -10,7 +10,8 @@ A LaTeX template for homework assignments, built around numbered `problem` /
 - `preamble.tex`: `\usepackage` commands and package configuration.
 - `format.tex`: The `problem` and `subproblem` environments, their equation
   numbering, and the page-break continuation notes.
-- `header.tex`: Title block, page header, and footer.
+- `header.tex`: Page header and footer. Page 1 adds the `\members` roster
+  under the team name.
 - `problem1.tex`: Example problem. Add `problem2.tex`, etc. and `\input` them.
 - `Makefile`: Build, lint, format, and watch targets.
 - `.latexmkrc`: latexmk configuration. Sends all output to `build/`.
@@ -21,7 +22,8 @@ A LaTeX template for homework assignments, built around numbered `problem` /
 
 ## Setup
 
-The flake provides texlive, latexmk, pandoc, chktex, and latexindent:
+The flake provides texlive, latexmk, pandoc, chktex, latexindent, and R with
+dplyr, ggplot2, knitr, qcc, readr, and tidyr (`nix develop .#r` for R alone):
 
 ```bash
 nix develop        # or `direnv allow`, via .envrc
@@ -33,8 +35,9 @@ The Python virtualenv is only built when `requirements.txt` is non-empty.
 ## Usage
 
 1. **Set the metadata** at the top of `assignment.tex` (`\myname`,
-   `\classname`, `\assignment`, `\assigndate`, `\keywords`). These feed the
-   title block, the page header, and the PDF metadata.
+   `\members`, `\classname`, `\assignment`, `\assigndate`, `\keywords`). These
+   feed the page header and the PDF metadata. `\members` appears on page 1
+   only; check that a long roster does not run into the right-hand stack.
 
 2. **Write problems** using the `problem` and `subproblem` environments:
 
@@ -106,10 +109,8 @@ whichever texlab bound most recently.
 ## Layout note
 
 `geometry` is loaded with `includeheadfoot` so the 3-line page header stays
-inside the 1in margin instead of landing in a printer's unprintable edge. The
-cost is body height (`textheight` 564pt rather than 650pt). To reclaim it,
-shorten the header to one line and drop `headheight` to 14pt, or use
-`margin=0.75in`.
+inside the margin instead of landing in a printer's unprintable edge. That
+costs body height, so the margin is 0.65in rather than 1in.
 
 ## CI/CD
 

@@ -15,18 +15,17 @@
 % combining accent rather than a single i-with-diaeresis, breaking copy-paste,
 % PDF search, and hyphenation of any word carrying an accent.
 \usepackage[T1]{fontenc}
-% Libertinus for text with its matching Type1 math. Note the style file is
-% libertinus-type1.sty, not libertinus.sty. It needs fontaxes, which the
-% flake pulls in; without it the build dies on a missing fontaxes.sty.
+% Libertinus for text with its matching Type1 math. The style file is
+% libertinus-type1.sty, not libertinus.sty, which is what the pdflatex-oriented
+% CTAN package installs.
 \usepackage{libertinus-type1}
 \usepackage{libertinust1math}
 
 \usepackage[english]{babel} % Language-specific settings
 \usepackage{csquotes}       % Context-sensitive quotation marks
-\usepackage{microtype}      % Margin kerning and font expansion. No config
-                            % needed; largest single improvement to how the
-                            % justified text reads, and removes most overfull
-                            % boxes on its own.
+% Margin kerning and font expansion. No config needed; largest single
+% improvement to how the justified text reads, and removes most overfull boxes.
+\usepackage{microtype}
 % \usepackage{fontspec}     % For custom fonts with XeLaTeX or LuaLaTeX
 
 % ==================================================
@@ -37,11 +36,11 @@
 % the body down 30pt without shrinking it, leaving a 1.41in top margin against
 % a 0.59in bottom one.
 %
-% includeheadfoot makes the 1in margin contain the header and footer, so the
-% 3-line header cannot land in a printer's unprintable edge. It costs body
-% height (textheight 564pt vs 650pt); reclaim it by shortening the header to
-% one line and dropping headheight to 14pt, or by going to margin=0.75in.
-\usepackage[margin=1in, includeheadfoot, headheight=42pt, headsep=14pt]{geometry}
+% includeheadfoot makes the margin contain the header and footer, so the
+% 3-line header cannot land in a printer's unprintable edge. That costs body
+% height, and the T1/lmodern metrics cost a little more, so the margin is 0.65in
+% rather than 1in.
+\usepackage[margin=0.65in, includeheadfoot, headheight=42pt, headsep=14pt]{geometry}
 \usepackage{fancyhdr}             % Custom headers and footers
 \usepackage{lastpage}             % \pageref{LastPage} for the "n of m" footer
 \pagestyle{fancy}
@@ -50,8 +49,6 @@
 % Math Packages
 % ==================================================
 \usepackage{amsmath}    % Core math functionality
-\usepackage{mathtools}  % amsmath fixes and extensions: \coloneqq,
-                        % \DeclarePairedDelimiter, better \underbrace spacing
 % Allow page breaks between rows of a display, but penalise them so they
 % happen only when the alternative is a badly underfull page. Without this
 % a long align is an unsplittable block.
@@ -63,6 +60,7 @@
 \usepackage{dsfont}     % Double-stroke fonts
 \usepackage{esint}      % More integrals
 \usepackage{mathrsfs}   % Script fonts
+\usepackage{mathtools}  % amsmath fixes: \coloneqq, \DeclarePairedDelimiter
 \usepackage{physics}    % Physics notations
 % Units. siunitx and physics both want the name \qty, and siunitx yields:
 % it detects physics, prints a warning, and leaves physics's \qty alone. So
@@ -70,6 +68,7 @@
 % \num{2.6667}. If you would rather have siunitx's \qty, its warning names the
 % fix: \AtBeginDocument{\RenewCommandCopy\qty\SI}.
 \usepackage{siunitx}
+\usepackage{xfrac}
 
 % ==================================================
 % Document Structure and Formatting
@@ -152,13 +151,14 @@
 % Number columns align on the decimal point: use S in the column spec, and wrap
 % any non-numeric cell in braces. siunitx is already loaded above.
 \sisetup{
+  group-separator = {,},
   table-number-alignment = center,
   detect-weight = true,
   detect-family = true,
 }
 \renewcommand{\headrulewidth}{0.6pt}
 \renewcommand{\headrule}{{\color{accent!70}%
-    \hrule height \headrulewidth width \headwidth}} % chktex 1
+      \hrule height \headrulewidth width \headwidth}} % chktex 1
 
 % ==================================================
 % Miscellaneous
